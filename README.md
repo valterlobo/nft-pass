@@ -1,4 +1,17 @@
-## Foundry
+## NFT PASS
+
+
+# deploy 
+forge script script/DeployToken.s.sol:NFTDeployScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+# deploy factory
+forge script script/DeployFactory.s.sol:DeployFactory --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
+
+# set 
+forge script script/TypeToken.s.sol:NFTTypeScript --rpc-url $SEPOLIA_RPC_URL --broadcast  -vvvv
+
+# mint
+forge script script/MintToken.s.sol:NFTMintScript --rpc-url $SEPOLIA_RPC_URL --broadcast  -vvvv
 
 **Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
