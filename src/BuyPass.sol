@@ -3,17 +3,19 @@ pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
-abstract contract BuyPass {
+import "@openzeppelin/contracts/access/Ownable.sol";
 
+abstract contract BuyPass is Ownable {
     using Math for uint256;
+
     uint256 private immutable feeTax;
-    address payable private  immutable plataformPay;
+    address payable private immutable plataformPay;
     address payable private immutable ownerPay;
 
-    constructor(address ownerAdrr, address feePlataform, uint256 fee) {
-        plataformPay = payable(feePlataform);
+    constructor(address ownerAdrr, address addrPlataform, uint256 feePlataform) {
+        plataformPay = payable(addrPlataform);
         ownerPay = payable(ownerAdrr);
-        feeTax = fee;
+        feeTax = feePlataform;
     }
 
     function buyNFTPass(uint256 idType, uint256 qtd) public payable virtual;
@@ -27,8 +29,8 @@ abstract contract BuyPass {
 
     receive() external payable {}
     fallback() external payable {}
-    
-    function claimPayment() external {
+
+    function claimPayment() external onlyOwner {
         uint256 amount = address(this).balance;
 
         uint256 payValue;
@@ -41,5 +43,4 @@ abstract contract BuyPass {
         (bool sentPlataform,) = plataformPay.call{value: feeValue}("");
         require(sentPlataform, "Failed to pay plataformPay");
     }
-
 }

@@ -18,10 +18,10 @@ contract NFTPass is ERC1155, ERC1155Pausable, ERC1155Burnable, ERC1155Supply, Pa
 
     error InsufficientAmountPayment(uint256 valueTotal, uint256 valueSender);
 
-    constructor(address initialOwner, address feeAddr, uint256 feeTax, string memory nm, string memory sbl)
+    constructor(address initialOwner, address addrPlataform, uint256 feePlaraform, string memory nm, string memory sbl)
         ERC1155("")
         PassType(initialOwner)
-        BuyPass(initialOwner, feeAddr, feeTax)
+        BuyPass(initialOwner, addrPlataform, feePlaraform)
     {
         name = nm;
         symbol = sbl;
