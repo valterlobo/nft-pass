@@ -12,6 +12,8 @@ contract NFTPassFactory {
     NFTPass[] openEvents;
 
     constructor(address payable _feeAddr, uint256 _feeTax) {
+        require(_feeAddr != address(0), "feeAddr address must be a not zero");
+
         feeAddr = _feeAddr;
         feeTax = _feeTax;
     }

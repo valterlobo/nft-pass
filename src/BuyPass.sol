@@ -4,6 +4,7 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
 abstract contract BuyPass is Ownable {
     using Math for uint256;
@@ -37,10 +38,13 @@ abstract contract BuyPass is Ownable {
         uint256 feeValue;
         (payValue, feeValue) = calcPayValues(amount);
 
-        (bool sentOwner,) = ownerPay.call{value: payValue}("");
+        Address.sendValue(ownerPay, payValue);
+        Address.sendValue(plataformPay, feeValue);
+
+        /* (bool sentOwner,) = ownerPay.call{value: payValue}("");
         require(sentOwner, "Failed to pay ownerPay");
 
         (bool sentPlataform,) = plataformPay.call{value: feeValue}("");
-        require(sentPlataform, "Failed to pay plataformPay");
+        require(sentPlataform, "Failed to pay plataformPay");*/
     }
 }

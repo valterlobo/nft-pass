@@ -18,10 +18,10 @@ contract NFTPass is ERC1155, ERC1155Pausable, ERC1155Burnable, ERC1155Supply, Pa
 
     error InsufficientAmountPayment(uint256 valueTotal, uint256 valueSender);
 
-    constructor(address initialOwner, address addrPlataform, uint256 feePlaraform, string memory nm, string memory sbl)
+    constructor(address initialOwner, address addrPlataform, uint256 feePlataform, string memory nm, string memory sbl)
         ERC1155("")
         PassType(initialOwner)
-        BuyPass(initialOwner, addrPlataform, feePlaraform)
+        BuyPass(initialOwner, addrPlataform, feePlataform)
     {
         name = nm;
         symbol = sbl;
@@ -69,11 +69,11 @@ contract NFTPass is ERC1155, ERC1155Pausable, ERC1155Burnable, ERC1155Supply, Pa
     }
 
     function contractURI() public view returns (string memory) {
-        return this.getPassInfoJSON();
+        return getPassInfoJSON();
     }
 
     function uri(uint256 id) public view override returns (string memory) {
-        return this.getPassTypeJSON(id);
+        return getPassTypeJSON(id);
     }
 
     // The following functions are overrides required by Solidity.
