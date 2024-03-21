@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.18;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 
 abstract contract BuyPass {
+
     using Math for uint256;
+    uint256 private immutable feeTax;
+    address payable private  immutable plataformPay;
+    address payable private immutable ownerPay;
 
-    uint256 feeTax;
-    address payable plataformPay;
-    address payable ownerPay;
-
-    constructor(address ownerAdrr, address feeAddr, uint256 fee) {
-        plataformPay = payable(feeAddr);
+    constructor(address ownerAdrr, address feePlataform, uint256 fee) {
+        plataformPay = payable(feePlataform);
         ownerPay = payable(ownerAdrr);
         feeTax = fee;
     }
@@ -25,6 +25,9 @@ abstract contract BuyPass {
         payValue = total - feeValue;
     }
 
+    receive() external payable {}
+    fallback() external payable {}
+    
     function claimPayment() external {
         uint256 amount = address(this).balance;
 
@@ -32,10 +35,11 @@ abstract contract BuyPass {
         uint256 feeValue;
         (payValue, feeValue) = calcPayValues(amount);
 
-        (bool sentOwner, bytes memory dataOwner) = ownerPay.call{value: payValue}("");
+        (bool sentOwner,) = ownerPay.call{value: payValue}("");
         require(sentOwner, "Failed to pay ownerPay");
 
-        (bool sentPlataform, bytes memory dataPlataform) = plataformPay.call{value: feeValue}("");
+        (bool sentPlataform,) = plataformPay.call{value: feeValue}("");
         require(sentPlataform, "Failed to pay plataformPay");
     }
+
 }

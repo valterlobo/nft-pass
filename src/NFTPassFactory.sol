@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.18;
 
 import "./NFTPass.sol";
 
 contract NFTPassFactory {
-    address payable feeAddr;
-    uint256 feeTax;
+    address payable private immutable feeAddr;
+    uint256 private immutable feeTax;
 
     mapping(address => NFTPass[]) mapIssuerNFTPass;
 
