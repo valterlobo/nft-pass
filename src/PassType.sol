@@ -9,7 +9,7 @@ contract PassType is Ownable {
 
     // ~~~~~~~~~~~~~~~~~~~~ Modifiers ~~~~~~~~~~~~~~~~~~~~
     modifier activePASSType(uint256 id) {
-        require(existsPassType(id), "This PAASType does not exist yet, check back later!");
+        require(existsPassType(id), "This PASSType does not exist yet, check back later!");
         _;
     }
 
@@ -48,7 +48,7 @@ contract PassType is Ownable {
     mapping(uint256 => PASSType) passTypes;
     mapping(uint256 => Property[]) passPropertys;
     uint256[] indexPassTypes;
-    PASSInfo paasInfo;
+    PASSInfo passInfo;
 
     function setPassInfo(
         string memory nm,
@@ -63,17 +63,17 @@ contract PassType is Ownable {
         string memory local,
         string memory link
     ) external onlyOwner {
-        paasInfo.name = nm;
-        paasInfo.description = description;
-        paasInfo.dateStart = dateStart;
-        paasInfo.dateEnd = dateEnd;
-        paasInfo.timeStart = timeStart;
-        paasInfo.timeEnd = timeEnd;
-        paasInfo.instructions = instructions;
-        paasInfo.author = author;
-        paasInfo.image = image;
-        paasInfo.local = local;
-        paasInfo.link = link;
+        passInfo.name = nm;
+        passInfo.description = description;
+        passInfo.dateStart = dateStart;
+        passInfo.dateEnd = dateEnd;
+        passInfo.timeStart = timeStart;
+        passInfo.timeEnd = timeEnd;
+        passInfo.instructions = instructions;
+        passInfo.author = author;
+        passInfo.image = image;
+        passInfo.local = local;
+        passInfo.link = link;
     }
 
     function addPASSType(
@@ -114,7 +114,7 @@ contract PassType is Ownable {
     }
 
     function getPASSInfo() public view returns (PASSInfo memory) {
-        return paasInfo;
+        return passInfo;
     }
 
     function getPassInfoJSON() public view returns (string memory) {
@@ -122,34 +122,34 @@ contract PassType is Ownable {
 
         bytes memory metadataParcial;
 
-        metadataParcial = abi.encodePacked('"', "name", '": "', paasInfo.name, '",');
+        metadataParcial = abi.encodePacked('"', "name", '": "', passInfo.name, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "description", '": "', paasInfo.description, '",');
+        metadataParcial = abi.encodePacked('"', "description", '": "', passInfo.description, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "dateStart", '": "', paasInfo.dateStart, '",');
+        metadataParcial = abi.encodePacked('"', "dateStart", '": "', passInfo.dateStart, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "dateEnd", '": "', paasInfo.dateEnd, '",');
+        metadataParcial = abi.encodePacked('"', "dateEnd", '": "', passInfo.dateEnd, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "timeStart", '": "', paasInfo.timeStart, '",');
+        metadataParcial = abi.encodePacked('"', "timeStart", '": "', passInfo.timeStart, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "author", '": "', paasInfo.author, '",');
+        metadataParcial = abi.encodePacked('"', "author", '": "', passInfo.author, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "instructions", '": "', paasInfo.instructions, '",');
+        metadataParcial = abi.encodePacked('"', "instructions", '": "', passInfo.instructions, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "image", '": "', paasInfo.image, '",');
+        metadataParcial = abi.encodePacked('"', "image", '": "', passInfo.image, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "local", '": "', paasInfo.local, '",');
+        metadataParcial = abi.encodePacked('"', "local", '": "', passInfo.local, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
-        metadataParcial = abi.encodePacked('"', "link", '": "', paasInfo.link, '"');
+        metadataParcial = abi.encodePacked('"', "link", '": "', passInfo.link, '"');
         metadata = abi.encodePacked(metadata, metadataParcial);
 
         metadata = abi.encodePacked(metadata, " }");

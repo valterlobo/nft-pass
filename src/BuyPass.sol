@@ -40,11 +40,5 @@ abstract contract BuyPass is Ownable {
 
         Address.sendValue(ownerPay, payValue);
         Address.sendValue(plataformPay, feeValue);
-
-        /* (bool sentOwner,) = ownerPay.call{value: payValue}("");
-        require(sentOwner, "Failed to pay ownerPay");
-
-        (bool sentPlataform,) = plataformPay.call{value: feeValue}("");
-        require(sentPlataform, "Failed to pay plataformPay");*/
     }
 }

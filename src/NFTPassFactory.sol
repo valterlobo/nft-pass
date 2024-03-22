@@ -26,7 +26,7 @@ contract NFTPassFactory {
         return openEvents;
     }
 
-    function createNFTPaas(string memory nm, string memory sbl) public returns (NFTPass) {
+    function createNFTPass(string memory nm, string memory sbl) public returns (NFTPass) {
         NFTPass nftPass = new NFTPass(msg.sender, feeAddr, feeTax, nm, sbl);
         mapIssuerNFTPass[msg.sender].push(nftPass);
         openEvents.push(nftPass);
@@ -34,7 +34,7 @@ contract NFTPassFactory {
         return nftPass;
     }
 
-    function closeNFTPaas(address issuer, NFTPass nftClosed) public view {
+    function closeNFTPass(address issuer, NFTPass nftClosed) public view {
         NFTPass[] memory nftEvents = mapIssuerNFTPass[issuer];
 
         int256 idxRemove = -1;
