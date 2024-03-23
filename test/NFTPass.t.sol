@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
 import {NFTPass, PassType} from "../src/NFTPass.sol";
@@ -37,16 +37,16 @@ contract NFTPassTest is Test {
         props[2] = PassType.Property("URL", "ipfs://QmTMG4fuQcsDX7D7r7bpGSLAMC7C5eYCGKdFrKnACGJHKc/image.gif", "ACESSO");
 
         vm.prank(promotor);
-        nftPASS.addPASSType(id, nameType, descriptionType, imgType, maxSupply, 45000000000000000, props);
+        nftPASS.addPassTypeData(id, nameType, descriptionType, imgType, maxSupply, 45000000000000000, props);
 
-        PassType.PASSType memory passTypeItem = nftPASS.getPASSType(id);
+        PassType.PassTypeData memory passTypeItem = nftPASS.getPassTypeData(id);
         console.log("Name:%s  | MAX SUPPLY %d", passTypeItem.name, passTypeItem.maxSupply);
         assertEq(nameType, passTypeItem.name);
         assertEq(id, passTypeItem.id);
         assertEq(maxSupply, passTypeItem.maxSupply);
 
         vm.prank(promotor);
-        nftPASS.addPASSType(
+        nftPASS.addPassTypeData(
             2,
             "VIP",
             "VIP- PASS para o acesso ao webnar & perguntas para o HOST",
@@ -56,7 +56,7 @@ contract NFTPassTest is Test {
             props
         );
 
-        PassType.Property[] memory propsGet = nftPASS.getMetadatas(id);
+        PassType.Property[] memory propsGet = nftPASS.getPassProperties(id);
 
         console.log(propsGet[0].key, propsGet[0].value);
         console.log(propsGet[1].key, propsGet[1].value);
@@ -66,18 +66,18 @@ contract NFTPassTest is Test {
         //vm.startPrank(alice);
         //token.mint(bob, bobAmount);
 
-        uint256[] memory indexTypes = nftPASS.getIndexPASSTypes();
+        uint256[] memory indexTypes = nftPASS.getIndexPassTypes();
 
         for (uint256 i = 0; i < indexTypes.length; i++) {
             uint256 idType = indexTypes[i];
-            PassType.PASSType memory p = nftPASS.getPASSType(idType);
+            PassType.PassTypeData memory p = nftPASS.getPassTypeData(idType);
             console.log(p.name);
         }
 
-        string memory strJSON = nftPASS.getPassTypeJSON(id);
+        string memory strJSON = nftPASS.getPassTypeDataJSON(id);
         console.log(strJSON);
 
-        strJSON = nftPASS.getPassTypeJSON(2);
+        strJSON = nftPASS.getPassTypeDataJSON(2);
         console.log(strJSON);
 
         //mint !
@@ -92,7 +92,7 @@ contract NFTPassTest is Test {
         string memory sbl = "ENFT";
 
         vm.prank(publico2);
-        NFTPass newPASS = nftPassFactory.createNFTPaas(nm, sbl);
+        NFTPass newPASS = nftPassFactory.createNFTPass(nm, sbl);
 
         console.log(newPASS.name());
         assertEq(newPASS.owner(), publico2);
@@ -104,8 +104,8 @@ contract NFTPassTest is Test {
         vm.deal(publico1, 0.8 ether);
         uint256 buyerBalanceBefore = address(buyer).balance;
 
-        console.log("/MAX SUPPLY:", newPASS.getPASSType(1).maxSupply, "-", newPASS.getPASSType(2).maxSupply);
-        console.log("/SUPPLY:", newPASS.getPASSType(1).supply, "-", newPASS.getPASSType(2).supply);
+        console.log("/MAX SUPPLY:", newPASS.getPassTypeData(1).maxSupply, "-", newPASS.getPassTypeData(2).maxSupply);
+        console.log("/SUPPLY:", newPASS.getPassTypeData(1).supply, "-", newPASS.getPassTypeData(2).supply);
 
         vm.prank(buyer);
         newPASS.buyNFTPass{value: 0.255 ether}(2, 3);
@@ -119,16 +119,17 @@ contract NFTPassTest is Test {
 
         console.log(buyerBalanceBefore, " ->", buyerBalanceAfter);
 
-        console.log("/SUPPLY:", newPASS.getPASSType(1).maxSupply, "-", newPASS.getPASSType(2).maxSupply);
-        console.log("/SUPPLY:", newPASS.getPASSType(1).supply, "-", newPASS.getPASSType(2).supply);
+        console.log("/SUPPLY:", newPASS.getPassTypeData(1).maxSupply, "-", newPASS.getPassTypeData(2).maxSupply);
+        console.log("/SUPPLY:", newPASS.getPassTypeData(1).supply, "-", newPASS.getPassTypeData(2).supply);
         console.log("CONTRACT BALANCE:", address(newPASS).balance);
 
-        vm.prank(buyer);
+        vm.prank(publico2);
         newPASS.claimPayment();
 
         console.log("AFTER CONTRACT BALANCE:", address(newPASS).balance);
 
-        console.log("PROMOTOR BALANCE:", address(publico2).balance);
+        console.log("PLATAFORM BALANCE:", address(plataform).balance);
+        console.log("PROMOTOR  BALANCE:", address(publico2).balance);
 
         console.log("-------/COMPRANDO A NFT PASS VIP --------");
     }
@@ -149,7 +150,7 @@ contract NFTPassTest is Test {
         string memory link = "https://www.youtube.com/watch?v=eBAdDVDId0U";
 
         vm.prank(promotor);
-        nftPASS.setPassInfo(
+        nftPASS.setPassInfoData(
             nm, description, dateStart, dateEnd, timeStart, timeEnd, instructions, author, image, local, link
         );
         console.log("---------------");
@@ -172,16 +173,16 @@ contract NFTPassTest is Test {
         props[2] = PassType.Property("URL", "ipfs://QmTMG4fuQcsDX7D7r7bpGSLAMC7C5eYCGKdFrKnACGJHKc/image.gif", "ACESSO");
 
         vm.prank(addrCreate);
-        nft.addPASSType(id, nameType, descriptionType, imgType, maxSupply, 45000000000000000, props);
+        nft.addPassTypeData(id, nameType, descriptionType, imgType, maxSupply, 45000000000000000, props);
 
-        PassType.PASSType memory passTypeItem = nft.getPASSType(id);
+        PassType.PassTypeData memory passTypeItem = nft.getPassTypeData(id);
         console.log("Name:%s  | MAX SUPPLY %d", passTypeItem.name, passTypeItem.maxSupply);
         assertEq(nameType, passTypeItem.name);
         assertEq(id, passTypeItem.id);
         assertEq(maxSupply, passTypeItem.maxSupply);
 
         vm.prank(addrCreate);
-        nft.addPASSType(
+        nft.addPassTypeData(
             2,
             "VIP",
             "VIP- PASS para o acesso ao webnar & perguntas para o HOST",
@@ -191,7 +192,7 @@ contract NFTPassTest is Test {
             props
         );
 
-        PassType.Property[] memory propsGet = nft.getMetadatas(id);
+        PassType.Property[] memory propsGet = nft.getPassProperties(id);
 
         console.log(propsGet[0].key, propsGet[0].value);
         console.log(propsGet[1].key, propsGet[1].value);
@@ -201,18 +202,18 @@ contract NFTPassTest is Test {
         //vm.startPrank(alice);
         //token.mint(bob, bobAmount);
 
-        uint256[] memory indexTypes = nft.getIndexPASSTypes();
+        uint256[] memory indexTypes = nft.getIndexPassTypes();
 
         for (uint256 i = 0; i < indexTypes.length; i++) {
             uint256 idType = indexTypes[i];
-            PassType.PASSType memory p = nft.getPASSType(idType);
+            PassType.PassTypeData memory p = nft.getPassTypeData(idType);
             console.log(p.name);
         }
 
-        string memory strJSON = nft.getPassTypeJSON(id);
+        string memory strJSON = nft.getPassTypeDataJSON(id);
         console.log(strJSON);
 
-        strJSON = nft.getPassTypeJSON(2);
+        strJSON = nft.getPassTypeDataJSON(2);
         console.log(strJSON);
     }
 }

@@ -1,79 +1,69 @@
 ## NFT PASS
 
+# deploy
 
-# deploy 
 forge script script/DeployToken.s.sol:NFTDeployScript --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 
 # deploy factory
+
 forge script script/DeployFactory.s.sol:DeployFactory --rpc-url $SEPOLIA_RPC_URL --broadcast --verify -vvvv
 
-# set 
+# set
+
 forge script script/TypeToken.s.sol:NFTTypeScript --rpc-url $SEPOLIA_RPC_URL --broadcast  -vvvv
 
 # mint
+
 forge script script/MintToken.s.sol:NFTMintScript --rpc-url $SEPOLIA_RPC_URL --broadcast  -vvvv
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## TODO
 
-Foundry consists of:
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+- Eventos para criação de  NFT PASS ( index e retornos)
+- UPDATE AND GET fee Tax and fee addr -> NFTFactory
+- Revisar metodos e segurança
+- Testes/Coverage nos contratos.
+- API ou TheGraph para pesquisa de eventos.
+- Desenvolver um micro componente para incluir em  outras paginas de eventos.
+- MultCall para adicionar as info e os tipos de pass.
+- Melhoria nos checks de parametros ( tempo de incio do evento , tempo final , etc ..)
+- Teste em uma pagina  checando o pass(NFT) para identificar novos requisistos
+- Integração no discord - com o collab !
+- Requisitos para o estorno.
+- Garantir o pagamento somente apos o termino do evento e confirmação dos participantes.
 
-## Documentation
+## Documentation fondry
 
-https://book.getfoundry.sh/
+<https://book.getfoundry.sh/>
 
 ## Usage
 
 ### Build
 
 ```shell
-$ forge build
+forge build
 ```
 
 ### Test
 
 ```shell
-$ forge test
+forge test
 ```
 
 ### Format
 
 ```shell
-$ forge fmt
+forge fmt
 ```
 
 ### Gas Snapshots
 
 ```shell
-$ forge snapshot
+forge snapshot
 ```
 
 ### Anvil
 
 ```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
+anvil
 ```

@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.20;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
 
 import {Script, console} from "forge-std/Script.sol";
 import "../src/NFTPassFactory.sol";
@@ -14,6 +14,13 @@ contract DeployFactory is Script {
         address payable feeAddr = payable(0x3F9E5E96b26156541D369e57337881f6BA9Bc6A9);
         uint256 feeTax = 10;
         NFTPassFactory factory = new NFTPassFactory(feeAddr, feeTax);
+        console.log(address(factory));
+
+        string memory nm = "NFT PASS";
+        string memory symbol = "NPASS";
+        //para verificar
+        NFTPass nftPASS = new NFTPass(feeAddr, feeAddr, 10, nm, symbol);
+        console.log(address(nftPASS));
 
         vm.stopBroadcast();
     }

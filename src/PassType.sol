@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Base64.sol";
@@ -8,14 +8,14 @@ contract PassType is Ownable {
     constructor(address initialOwner) Ownable(initialOwner) {}
 
     // ~~~~~~~~~~~~~~~~~~~~ Modifiers ~~~~~~~~~~~~~~~~~~~~
-    modifier activePASSType(uint256 id) {
-        require(existsPassType(id), "This PASSType does not exist yet, check back later!");
+    modifier activePassType(uint256 id) {
+        require(existsPassType(id), "This PassType does not exist yet, check back later!");
         _;
     }
 
     error InsufficientSupply(uint256 total, uint256 maxsupply);
 
-    struct PASSInfo {
+    struct PassInfoData {
         string name;
         string description;
         string dateStart;
@@ -29,7 +29,7 @@ contract PassType is Ownable {
         string link;
     }
 
-    struct PASSType {
+    struct PassTypeData {
         uint256 id;
         string name;
         string description;
@@ -45,12 +45,12 @@ contract PassType is Ownable {
         string p_type;
     }
 
-    mapping(uint256 => PASSType) passTypes;
-    mapping(uint256 => Property[]) passPropertys;
+    mapping(uint256 => PassTypeData) passTypes;
+    mapping(uint256 => Property[]) passProperties;
     uint256[] indexPassTypes;
-    PASSInfo passInfo;
+    PassInfoData passInfo;
 
-    function setPassInfo(
+    function setPassInfoData(
         string memory nm,
         string memory description,
         string memory dateStart,
@@ -76,7 +76,7 @@ contract PassType is Ownable {
         passInfo.link = link;
     }
 
-    function addPASSType(
+    function addPassTypeData(
         uint256 id,
         string memory nameType,
         string memory descriptionType,
@@ -85,39 +85,39 @@ contract PassType is Ownable {
         uint256 price,
         Property[] memory properties
     ) external onlyOwner {
-        require(!existsPassType(id), "This PASSType EXIST [ID]");
+        require(!existsPassType(id), "This PassType EXIST [ID]");
 
-        PASSType memory newPassType = PASSType(id, nameType, descriptionType, imageURI, maxSupply, 0, price);
+        PassTypeData memory newPassType = PassTypeData(id, nameType, descriptionType, imageURI, maxSupply, 0, price);
 
         passTypes[id] = newPassType;
 
         for (uint256 index = 0; index < properties.length; index++) {
             Property memory p = properties[index];
-            passPropertys[id].push(p);
+            passProperties[id].push(p);
         }
 
         indexPassTypes.push(id);
     }
 
-    function getMetadatas(uint256 id) public view returns (Property[] memory) {
-        require(existsPassType(id), "This PASSType does not exist yet, check back later!");
-        return passPropertys[id];
+    function getPassProperties(uint256 id) public view returns (Property[] memory) {
+        require(existsPassType(id), "This PassType does not exist yet, check back later!");
+        return passProperties[id];
     }
 
-    function getPASSType(uint256 id) public view returns (PASSType memory) {
-        require(existsPassType(id), "This PASSType does not exist yet, check back later!");
+    function getPassTypeData(uint256 id) public view returns (PassTypeData memory) {
+        require(existsPassType(id), "This PassType does not exist yet, check back later!");
         return passTypes[id];
     }
 
-    function getIndexPASSTypes() public view returns (uint256[] memory) {
+    function getIndexPassTypes() public view returns (uint256[] memory) {
         return indexPassTypes;
     }
 
-    function getPASSInfo() public view returns (PASSInfo memory) {
+    function getPassInfoData() public view returns (PassInfoData memory) {
         return passInfo;
     }
 
-    function getPassInfoJSON() public view returns (string memory) {
+    function getPassInfoDataJSON() public view returns (string memory) {
         bytes memory metadata = "{";
 
         bytes memory metadataParcial;
@@ -158,12 +158,12 @@ contract PassType is Ownable {
         return string(abi.encodePacked("data:application/json;base64,", attributes64));
     }
 
-    function getPassTypeJSON(uint256 id) public view returns (string memory) {
+    function getPassTypeDataJSON(uint256 id) public view returns (string memory) {
         bytes memory metadata = "{";
 
         bytes memory metadataParcial;
 
-        PASSType memory pType = passTypes[id];
+        PassTypeData memory pType = passTypes[id];
 
         metadataParcial = abi.encodePacked('"', "name", '": "', pType.name, '",');
         metadata = abi.encodePacked(metadata, metadataParcial);
@@ -176,7 +176,7 @@ contract PassType is Ownable {
 
         metadata = abi.encodePacked(metadata, '"attributes": [');
 
-        PassType.Property[] memory props = passPropertys[id];
+        PassType.Property[] memory props = passProperties[id];
         uint256 idx = props.length;
         for (uint256 index = 0; index < props.length; index++) {
             Property memory p = props[index];

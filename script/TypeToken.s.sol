@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.20;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.24;
 
 import {Script, console} from "forge-std/Script.sol";
 import "../src/NFTPass.sol";
@@ -11,7 +11,7 @@ contract NFTTypeScript is Script {
         uint256 deployerPrivateKey = vm.envUint("PRIVATE_KEY");
         vm.startBroadcast(deployerPrivateKey);
         address tkContract = vm.envAddress("TK_CONTRACT");
-        NFTPass nft = NFTPass(tkContract);
+        NFTPass nft = NFTPass(payable(tkContract));
 
         //NFT info
         string memory nm = "Hackaton Como ganhei varios";
@@ -26,7 +26,7 @@ contract NFTTypeScript is Script {
         string memory local = "Online";
         string memory link = "https://www.youtube.com/watch?v=eBAdDVDId0U";
 
-        nft.setPassInfo(
+        nft.setPassInfoData(
             nm, description, dateStart, dateEnd, timeStart, timeEnd, instructions, author, image, local, link
         );
 
@@ -40,7 +40,7 @@ contract NFTTypeScript is Script {
         props[2] = PassType.Property("URL", "https://www.youtube.com/watch?v=eBAdDVDId0U", "ACESSO");
 
         // TYPE : COMMUN
-        nft.addPASSType(
+        nft.addPassTypeData(
             1,
             "COMMUN",
             "COMMUN- PASS para o acesso ao webnar",
@@ -52,7 +52,7 @@ contract NFTTypeScript is Script {
 
         //TYPE : VIP
 
-        nft.addPASSType(
+        nft.addPassTypeData(
             2,
             "VIP",
             "VIP- PASS para o acesso ao webnar & perguntas para o HOST",

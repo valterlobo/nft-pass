@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
@@ -13,8 +13,6 @@ import "./BuyPass.sol";
 contract NFTPass is ERC1155, ERC1155Pausable, ERC1155Burnable, ERC1155Supply, PassType, BuyPass {
     string public name = "NFT PASS";
     string public symbol = "NFPASS";
-
-    //error OperatorUNAUTHORIZED(address operator , address executor);
 
     error InsufficientAmountPayment(uint256 valueTotal, uint256 valueSender);
 
@@ -35,8 +33,8 @@ contract NFTPass is ERC1155, ERC1155Pausable, ERC1155Burnable, ERC1155Supply, Pa
         _unpause();
     }
 
-    function mintInternal(address account, uint256 id, uint256 amount) internal activePASSType(id) {
-        PassType.PASSType storage pType = passTypes[id];
+    function mintInternal(address account, uint256 id, uint256 amount) internal activePassType(id) {
+        PassType.PassTypeData storage pType = passTypes[id];
 
         if (pType.supply + amount > pType.maxSupply) {
             revert PassType.InsufficientSupply(pType.supply + amount, pType.maxSupply);
@@ -49,17 +47,17 @@ contract NFTPass is ERC1155, ERC1155Pausable, ERC1155Burnable, ERC1155Supply, Pa
         _mint(account, id, amount, data);
     }
 
-    function mint(address account, uint256 id, uint256 amount) external onlyOwner activePASSType(id) {
+    function mint(address account, uint256 id, uint256 amount) external onlyOwner activePassType(id) {
         mintInternal(account, id, amount);
     }
 
-    function buyNFTPass(uint256 idType, uint256 qtd) public payable override activePASSType(idType) {
+    function buyNFTPass(uint256 idType, uint256 qtd) public payable override activePassType(idType) {
         checkPayment(idType, qtd);
         mintInternal(msg.sender, idType, qtd);
     }
 
     function checkPayment(uint256 idType, uint256 qtd) public payable override {
-        PASSType memory pType = getPASSType(idType);
+        PassTypeData memory pType = getPassTypeData(idType);
 
         uint256 priceTotal = pType.price * qtd;
 
@@ -69,11 +67,11 @@ contract NFTPass is ERC1155, ERC1155Pausable, ERC1155Burnable, ERC1155Supply, Pa
     }
 
     function contractURI() public view returns (string memory) {
-        return getPassInfoJSON();
+        return getPassInfoDataJSON();
     }
 
     function uri(uint256 id) public view override returns (string memory) {
-        return getPassTypeJSON(id);
+        return getPassTypeDataJSON(id);
     }
 
     // The following functions are overrides required by Solidity.

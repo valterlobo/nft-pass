@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+pragma solidity ^0.8.24;
 
 import {Test, console} from "forge-std/Test.sol";
 import {PassType} from "../src/PassType.sol";
@@ -29,16 +29,16 @@ contract PassTypeTest is Test {
         props[2] = PassType.Property("URL", "IPFS://XXXXXXXXXXXX/img.png", "ACESSO");
 
         vm.prank(promotor);
-        passType.addPASSType(id, nameType, descriptionType, imgType, maxSupply, 45000000, props);
+        passType.addPassTypeData(id, nameType, descriptionType, imgType, maxSupply, 45000000, props);
 
-        PassType.PASSType memory passTypeItem = passType.getPASSType(id);
+        PassType.PassTypeData memory passTypeItem = passType.getPassTypeData(id);
         console.log("Name:%s  | MAX SUPPLY %d", passTypeItem.name, passTypeItem.maxSupply);
         assertEq(nameType, passTypeItem.name);
         assertEq(id, passTypeItem.id);
         assertEq(maxSupply, passTypeItem.maxSupply);
 
         vm.prank(promotor);
-        passType.addPASSType(
+        passType.addPassTypeData(
             2,
             "VIP",
             "VIP- PASS para o acesso ao webnar & perguntas para o HOST",
@@ -48,7 +48,7 @@ contract PassTypeTest is Test {
             props
         );
 
-        PassType.Property[] memory propsGet = passType.getMetadatas(id);
+        PassType.Property[] memory propsGet = passType.getPassProperties(id);
 
         console.log(propsGet[0].key, propsGet[0].value);
         console.log(propsGet[1].key, propsGet[1].value);
@@ -58,18 +58,18 @@ contract PassTypeTest is Test {
         //vm.startPrank(alice);
         //token.mint(bob, bobAmount);
 
-        uint256[] memory indexTypes = passType.getIndexPASSTypes();
+        uint256[] memory indexTypes = passType.getIndexPassTypes();
 
         for (uint256 i = 0; i < indexTypes.length; i++) {
             uint256 idType = indexTypes[i];
-            PassType.PASSType memory p = passType.getPASSType(idType);
+            PassType.PassTypeData memory p = passType.getPassTypeData(idType);
             console.log(p.name);
         }
 
-        string memory strJSON = passType.getPassTypeJSON(id);
+        string memory strJSON = passType.getPassTypeDataJSON(id);
         console.log(strJSON);
 
-        strJSON = passType.getPassTypeJSON(2);
+        strJSON = passType.getPassTypeDataJSON(2);
         console.log(strJSON);
     }
 
@@ -89,11 +89,11 @@ contract PassTypeTest is Test {
         string memory link = "https://www.youtube.com/watch?v=eBAdDVDId0U";
 
         vm.prank(promotor);
-        passType.setPassInfo(
+        passType.setPassInfoData(
             nm, description, dateStart, dateEnd, timeStart, timeEnd, instructions, author, image, local, link
         );
         console.log("---------------");
-        string memory passInfoJSON = passType.getPassInfoJSON();
+        string memory passInfoJSON = passType.getPassInfoDataJSON();
         console.log(passInfoJSON);
     }
 }
